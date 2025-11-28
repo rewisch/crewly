@@ -1,0 +1,2 @@
+CompileFlags:
+  Add: [-D CREWLY_DATABASE_IMPLEMENTATION]
