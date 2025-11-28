@@ -1,10 +1,14 @@
 #include <fcntl.h>
 #include <getopt.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
-#include "common.c"
-#include "database.c"
+#define CREWLY_DATABASE_IMPLEMENTATION
+
+#include "common.h"
+#include "models.h"
+#include "database.h"
 
 int crewly_print_usage(char *argv[])
 {

@@ -1,3 +1,5 @@
+#ifndef CREWLY_COMMON_H
+
 #ifndef STATUS_SUCCESS
 #define STATUS_SUCCESS 1
 #endif
@@ -12,4 +14,6 @@
 
 #ifndef FALSE
 #define FALSE 0
+#endif
+
 #endif
