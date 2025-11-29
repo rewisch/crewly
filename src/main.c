@@ -11,6 +11,21 @@
 #include "models.h"
 #include "database.h"
 
+int crewly_check_endianness(void)
+{
+    unsigned int x = 0x01020304;
+    unsigned char *p = (unsigned char *)&x;
+
+    if (p[0] != 0x04)
+    {
+        printf("You are not on a little endian machine. My laziness keeps you from using this "
+               "program!\n");
+        printf("Sorry for that!\n");
+        return STATUS_ERROR;
+    }
+
+    return STATUS_SUCCESS;
+}
 int crewly_print_usage(char *argv[])
 {
     printf("Usage: %s -n -f <database filename>\n", argv[0]);
@@ -21,6 +36,11 @@ int crewly_print_usage(char *argv[])
 
 int main(int argc, char *argv[])
 {
+
+    if (crewly_check_endianness() == STATUS_ERROR)
+    {
+        return STATUS_ERROR;
+    }
 
     char crewly_main_database_create_flag = FALSE;
     char *crewly_main_database_filename = NULL;
