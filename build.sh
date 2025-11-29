@@ -24,5 +24,6 @@ else
     -o ./dst/crewly \
     -g \
     -Wall \
-    -Wextra
+    -Wextra \
+    -DDEBUG
 fi
