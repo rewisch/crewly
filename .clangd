@@ -1,2 +1,6 @@
 CompileFlags:
-  Add: [-D CREWLY_DATABASE_IMPLEMENTATION]
+  Add: [
+    -x, c,
+    -std=c11,
+    -D, CREWLY_DATABASE_IMPLEMENTATION
+  ]
