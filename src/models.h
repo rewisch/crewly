@@ -1,7 +1,7 @@
 #ifndef CREWLY_MODELS_H
 #define CREWLY_MODELS_H
 
-#define HEADER_MAGIC 0x43524C59
+#define HEADER_MAGIC 0x594C5243
 
 struct crewly_models_databaseheader_struct
 {
