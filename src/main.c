@@ -2,6 +2,7 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 #define CREWLY_DATABASE_IMPLEMENTATION
@@ -25,6 +26,7 @@ int main(int argc, char *argv[])
     char *crewly_main_database_filename = NULL;
     int crewly_main_option;
     int crewly_main_database_file_descriptor = -1;
+    struct crewly_models_databaseheader_struct crewly_main_file_header = {0};
 
     while ((crewly_main_option = getopt(argc, argv, "nf:")) != -1)
     {
@@ -58,8 +60,17 @@ int main(int argc, char *argv[])
         {
             return STATUS_ERROR;
         }
-        printf("The filehandler of the newly created file we obtained is %d\n",
-               crewly_main_database_file_descriptor);
+
+        struct crewly_models_databaseheader_struct *new_database_header =
+            malloc(sizeof(struct crewly_models_databaseheader_struct));
+
+        crewly_database_create_database_header(crewly_main_database_file_descriptor,
+                                               new_database_header);
+
+        write(crewly_main_database_file_descriptor, new_database_header,
+              sizeof(struct crewly_models_databaseheader_struct));
+
+        free(new_database_header);
     }
     else
     {
@@ -69,8 +80,13 @@ int main(int argc, char *argv[])
         {
             return STATUS_ERROR;
         }
-        printf("The filehandler of already existing file we obtained is %d\n",
-               crewly_main_database_file_descriptor);
+
+        // Make sure the file wasn't tempered with
+        if (crewly_databaseheader_validate_header(crewly_main_database_file_descriptor) ==
+            STATUS_ERROR)
+        {
+            return STATUS_ERROR;
+        }
     }
 
     // CLEANUP
