@@ -171,6 +171,7 @@ int main(int argc, char *argv[])
     }
 
     // CLEANUP
+    free(crewly_main_file_header);
     if (close(crewly_main_database_file_descriptor) < 0)
     {
         perror("close");
