@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
     char crewly_main_add_employee_flag = FALSE;
     char *crewly_main_database_filename = NULL;
     char crewly_main_display_all = FALSE;
+    char *crewly_main_addstring = NULL;
     int crewly_main_option;
     int crewly_main_database_file_descriptor = -1;
     struct crewly_models_employee_struct *crewly_main_employees = NULL;
@@ -64,6 +65,7 @@ int main(int argc, char *argv[])
             break;
         case 'a':
             crewly_main_add_employee_flag = TRUE;
+            crewly_main_addstring = optarg;
             break;
         case 'D':
             crewly_main_display_all = TRUE;
@@ -138,9 +140,13 @@ int main(int argc, char *argv[])
     {
         struct crewly_models_employee_struct nemp = {};
 
-        strcpy(nemp.name, "Reto Wietlisbach");
-        strcpy(nemp.address, "Zuercher Strasse 197, 9014 St. Gallen");
-        nemp.hoursWorkedTotal = 302;
+        char *name = strtok(crewly_main_addstring, ",");
+        char *address = strtok(NULL, ",");
+        char *hours_worked = strtok(NULL, ",");
+
+        strcpy(nemp.name, name);
+        strcpy(nemp.address, address);
+        nemp.hoursWorkedTotal = atoi(hours_worked);
 
         crewly_main_employees =
             realloc(crewly_main_employees, (crewly_main_file_header->count + 1) *
