@@ -1,4 +1,5 @@
 #ifndef CREWLY_COMMON_H
+#define CREWLY_COMMON_H
 
 #ifndef STATUS_SUCCESS
 #define STATUS_SUCCESS 1
