@@ -39,6 +39,7 @@ int crewly_print_usage(char *argv[])
 
 int main(int argc, char *argv[])
 {
+    int ret = STATUS_ERROR;
 
     if (crewly_check_endianness() == STATUS_ERROR)
     {
@@ -83,7 +84,7 @@ int main(int argc, char *argv[])
     {
         printf("Filepath is a required argument\n");
         crewly_print_usage(argv);
-        return STATUS_ERROR;
+        goto cleanup;
     }
 
     if (crewly_main_database_create_flag)
@@ -93,7 +94,7 @@ int main(int argc, char *argv[])
             crewly_database_create_database(crewly_main_database_filename);
         if (crewly_main_database_file_descriptor < 0)
         {
-            return STATUS_ERROR;
+            goto cleanup;
         }
 
         struct crewly_models_databaseheader_struct *new_database_header =
@@ -112,14 +113,14 @@ int main(int argc, char *argv[])
             crewly_database_open_database(crewly_main_database_filename);
         if (crewly_main_database_file_descriptor < 0)
         {
-            return STATUS_ERROR;
+            goto cleanup;
         }
 
         // Make sure the file wasn't tempered with
         if (crewly_databaseheader_validate_header(crewly_main_database_file_descriptor,
                                                   crewly_main_file_header) == STATUS_ERROR)
         {
-            return STATUS_ERROR;
+            goto cleanup;
         }
     }
 
@@ -129,7 +130,7 @@ int main(int argc, char *argv[])
                                             sizeof(struct crewly_models_employee_struct))) == NULL)
         {
             printf("Failed to allocate memory for employees\n");
-            return -1;
+            goto cleanup;
         }
 
         crewly_database_read_employees(crewly_main_database_file_descriptor, crewly_main_employees,
@@ -170,13 +171,21 @@ int main(int argc, char *argv[])
         }
     }
 
-    // CLEANUP
-    free(crewly_main_file_header);
-    if (close(crewly_main_database_file_descriptor) < 0)
-    {
-        perror("close");
-        return STATUS_ERROR;
-    };
+    ret = STATUS_SUCCESS;
 
-    return STATUS_SUCCESS;
+    // CLEANUP
+cleanup:
+    if (crewly_main_employees)
+    {
+        free(crewly_main_employees);
+    }
+    if (crewly_main_file_header)
+    {
+        free(crewly_main_file_header);
+    }
+    if (crewly_main_database_file_descriptor > -1)
+    {
+        close(crewly_main_database_file_descriptor);
+    }
+    return ret;
 }
